@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    stages{
+        stage('Início') {
+            steps {
+                sh 'echo INICIO'
+            }
+        }
+        stage('Meio') {
+            steps {
+                sh 'echo MEIO'
+                sh 'echo MEIO 2'
+            }
+        }
+        stage('Fim') {
+            steps {
+                sleep(5)
+                sh 'echo FIM'
+            }
+        }
+        
+    }
+}
