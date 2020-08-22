@@ -1,23 +1,16 @@
 pipeline {
     agent any
     stages{
-        stage('Início') {
+        stage('Build Backend') {
             steps {
-                sh 'echo INICIO'
+            	/*
+                Pelo ciclo de vida do maven, antes de executar um package, 
+                o mesmo executa a fase de test do maven.
+                Mas como quero separar estas etapas, segue a seguinte configuração.
+                Limpar, empacotar, mas não execute testes!
+                */
+                sh 'mvn clean package -DskipTests=true'
             }
-        }
-        stage('Meio') {
-            steps {
-                sh 'echo MEIO'
-                sh 'echo MEIO 2'
-            }
-        }
-        stage('Fim') {
-            steps {
-                sleep(5)
-                sh 'echo FIM'
-            }
-        }
-        
+        }        
     }
 }
