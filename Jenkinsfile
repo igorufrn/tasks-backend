@@ -69,6 +69,18 @@ pipeline {
             	}
             }
         }
+        stage('Testes Funcionais') {
+            steps {
+            	/*
+            	Evita sobrescrever o binário gerado, executando os 
+            	testes funcionais e salvando os resultados em um outro diretório!
+            	*/            	
+            	dir('functional-test') {
+				    git credentialsId: 'GitHub_Login', url: 'https://github.com/igorufrn/tasks-funcional-test'
+            		sh 'mvn test'
+				}
+            }
+        }
     }
 }
 
