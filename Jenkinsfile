@@ -30,6 +30,13 @@ pipeline {
         }
         stage('Quality Gate do SONAR') {        	
             steps {
+            	/*
+            	O sleep pode ser evitado com WebHooks do SONAR
+            	Este tempo em segundos é calibrado de acordo com o ambiente e 
+            	é o tempo necessário para o SONAR processar as regras 
+            	associadas ao projeto e informar ao JENKINS se o mesmo deve
+            	prosseguir com o pipeline
+            	*/  
             	sleep(5)
             	timeout(time: 1, unit: 'MINUTES'){
             		waitForQualityGate abortPipeline: true            	                 
@@ -41,5 +48,17 @@ pipeline {
             	deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: null, war: 'target/tasks-backend.war'
             }
         }
+        stage('Testes de API') {
+            steps {
+            	/*
+            	Evita sobrescrever o binário gerado, executando os 
+            	testes e salvando os resultados em um outro diretório!
+            	*/            	
+            	dir('api-test') {
+				    git credentialsId: 'GitHub_Login', url: 'https://github.com/igorufrn/tasks-api-test'
+            		sh 'mvn test'
+				}
+            }
+        }        
     }
 }
