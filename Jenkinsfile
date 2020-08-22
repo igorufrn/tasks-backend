@@ -59,6 +59,17 @@ pipeline {
             		sh 'mvn test'
 				}
             }
-        }        
+        }
+        stage('Deploy Frontend') {
+            steps {
+            	dir('frontend') {
+            		git credentialsId: 'GitHub_Login', url: 'https://github.com/igorufrn/tasks-frontend'
+            		sh 'mvn clean package -DskipTests=true'
+            		deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: null, war: 'target/tasks.war'
+            	}
+            }
+        }
     }
 }
+
+
